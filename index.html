@@ -30,6 +30,9 @@ h1 em{font-style:normal;color:var(--fs)}
 .lab{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
 .client{font-size:22px;font-weight:700;margin-top:2px;text-wrap:balance}
 .dates{color:var(--muted);font-size:13px;margin-top:2px}
+.coord{font-size:12.5px;margin-top:4px;line-height:1.45}
+.coord span+span::before{content:" · ";color:var(--muted)}
+.coord i{font-style:normal;color:var(--muted);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;margin-right:3px}
 .draft{display:inline-block;margin-top:8px;border:1.3px dashed var(--warn);color:var(--warn);border-radius:999px;padding:3px 10px;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
 .qr{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10.5px;color:var(--muted);text-align:center}
 .qr svg{width:156px;height:156px;display:block}
@@ -2428,6 +2431,8 @@ async function afficher(){
     <div class="body">
       <div class="head">
         <div><div class="lab">Préparée pour</div><div class="client">${esc(o.c||"Votre entreprise")}</div>
+          ${o.a?`<div class="coord">${esc(o.a)}</div>`:""}
+          ${o.t||o.b||o.x?`<div class="coord">${o.t?`<span><i>Tél</i>${esc(o.t)}</span>`:""}${o.b?`<span><i>BRN</i>${esc(o.b)}</span>`:""}${o.x?`<span><i>TVA</i>${esc(o.x)}</span>`:""}</div>`:""}
           <div class="dates">Le ${dateFr(o.d)} · valable jusqu'au ${dateFr(o.d,o.v||30)}</div>
           ${o.w?"":'<span class="draft">Proposition indicative, prix à confirmer</span>'}</div>
         ${lienQr?`<div class="qr" id="qr"></div>`:""}
