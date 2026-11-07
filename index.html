@@ -2386,6 +2386,8 @@ var qrcode = function() {
 const $=s=>document.getElementById(s);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function b64d(s){s=s.replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s+="=";return Uint8Array.from(atob(s),c=>c.charCodeAt(0));}
+/* dans l'écran Commercial, l'offre est affichée dans un cadre sans adresse : le code est alors posé dans CODE_OFFRE */
+const HASH=window.CODE_OFFRE?"#"+window.CODE_OFFRE:location.hash;
 async function lire(h){
   if(!h)throw new Error("vide");
   const bytes=b64d(h.slice(1));
@@ -2400,7 +2402,7 @@ function dateFr(iso,plus){const d=new Date(iso);if(plus)d.setDate(d.getDate()+pl
 
 async function afficher(){
   let o;
-  try{o=await lire(location.hash.slice(1));}catch(e){
+  try{o=await lire(HASH.slice(1));}catch(e){
     $("app").innerHTML='<div class="err"><h2>Offre introuvable</h2><p>Le lien est incomplet. Scannez de nouveau le QR code, ou demandez le lien à votre conseiller fullstap.</p></div>';return;}
   const f=fmtF(o);
   let brut=0,net=0;const rows=[];
@@ -2413,7 +2415,7 @@ async function afficher(){
   o.e=Number(o.e)||0;o.g=Number(o.g)||0;o.r=Number(o.r)||0;o.v=Number(o.v)||30;o.k=Number(o.k)||0;
   const tot=net*(1-(o.e||0)/100)*(1-(o.g||0)/100);
   const cs=o.k?tot/o.k:0;
-  const lienQr=o.u?o.u.replace(/#.*$/,"")+location.hash:(/^https?:/.test(location.href)?location.href:"");
+  const lienQr=o.u?o.u.replace(/#.*$/,"")+HASH:(/^https?:/.test(location.href)?location.href:"");
   const cfg=(Array.isArray(o.q)?o.q:[]).map(([lib,plur,v])=>`<span><b>${Number(v)||0}</b>${esc(v>1?plur:lib)}</span>`).join("");
   document.title="Offre iBora "+(o.n||"")+(o.c?" · "+o.c:"");
   $("app").innerHTML=`
